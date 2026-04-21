@@ -4,6 +4,7 @@ import (
 	"expense-tracker/config"
 	"expense-tracker/routes"
 	"log"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,11 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	config.ConnectDB()
 
 	r := gin.Default()
@@ -22,5 +28,5 @@ func main() {
 
 	routes.RegisterRoutes(r)
 
-	r.Run(":8080")
+	r.Run(":" + port)
 }
