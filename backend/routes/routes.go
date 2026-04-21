@@ -12,4 +12,5 @@ func RegisterRoutes(r *gin.Engine) {
 	})
 
 	r.POST("/expenses", controllers.CreateExpense)
+	r.GET("/expenses", controllers.GetExpenses)
 }
