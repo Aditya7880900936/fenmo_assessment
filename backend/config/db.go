@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -12,7 +13,7 @@ var DB *mongo.Database
 
 func ConnectDB() {
 	client, err := mongo.Connect(context.TODO(),
-		options.Client().ApplyURI("mongodb+srv://adityasanskarsrivastav788_db_user:pass7880@cluster0.hwixfs7.mongodb.net/?appName=Cluster0"))
+		options.Client().ApplyURI(os.Getenv("MONGO_URI")))
 
 	if err != nil {
 		log.Fatal("Mongo connection failed:", err)

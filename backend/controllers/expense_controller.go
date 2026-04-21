@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -34,6 +35,16 @@ func CreateExpense(c *gin.Context) {
 
 	var expense models.Expense
 
+	// ✅ FIRST: bind JSON
+	if err := c.ShouldBindJSON(&expense); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	// ✅ NOW: debug
+	fmt.Println("Incoming Amount:", expense.Amount)
+
+	// ✅ NOW: validation
 	if expense.Amount <= 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Amount must be positive"})
 		return
@@ -43,12 +54,6 @@ func CreateExpense(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Category and Date required"})
 		return
 	}
-
-	if err := c.ShouldBindJSON(&expense); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-
 	expense.CreatedAt = time.Now().Format(time.RFC3339)
 
 	result, err := collection.InsertOne(context.TODO(), expense)
